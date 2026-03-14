@@ -1,0 +1,25 @@
+[begin] (Oompa Loompa)
+  [submenu] (Agents - tmux sessions)
+    [exec] (Claude Code) {xterm -fa "Monospace" -fs 12 -e tmux a -t claude}
+    [exec] (Copilot CLI) {xterm -fa "Monospace" -fs 12 -e tmux a -t copilot}
+    [exec] (Codex CLI)   {xterm -fa "Monospace" -fs 12 -e tmux a -t codex}
+    [exec] (Gemini CLI)  {xterm -fa "Monospace" -fs 12 -e tmux a -t gemini}
+    [exec] (Agent Selector) {xterm -fa "Monospace" -fs 12 -e agent-select}
+  [end]
+  [submenu] (Browsers)
+    [exec] (Chromium)    {chromium --no-sandbox}
+    [exec] (Firefox ESR) {firefox-esr}
+  [end]
+  [submenu] (Terminals)
+    [exec] (Shell - tmux) {xterm -fa "Monospace" -fs 12 -e tmux a -t shell}
+    [exec] (New tmux)     {xterm -fa "Monospace" -fs 12 -e tmux}
+    [exec] (Bash)         {xterm -fa "Monospace" -fs 12 -e bash}
+  [end]
+  [separator]
+  [submenu] (System)
+    [exec] (Top)         {xterm -fa "Monospace" -fs 12 -e top}
+    [exec] (tmux list)   {xterm -fa "Monospace" -fs 12 -e bash -c "tmux ls; read -p 'Press enter...'"}
+  [end]
+  [separator]
+  [exit] (Exit Fluxbox)
+[end]

@@ -1,0 +1,8 @@
+session.screen0.toolbar.visible: true
+session.screen0.toolbar.placement: BottomCenter
+session.screen0.toolbar.widthPercent: 100
+session.screen0.toolbar.tools: prevworkspace, workspacename, nextworkspace, iconbar, systemtray, clock
+session.screen0.workspaces: 4
+session.screen0.workspaceNames: Main,Agent-1,Agent-2,Agent-3
+session.styleFile: /usr/share/fluxbox/styles/debian-dark
+session.menuFile: /home/dev/.fluxbox/menu

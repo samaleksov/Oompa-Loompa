@@ -1,0 +1,95 @@
+# =============================================================================
+# Oompa Loompa - Podman Compose
+#
+# Usage:
+#   podman-compose up -d                  # start all services
+#   podman-compose exec agent bash        # shell into running container
+#   podman-compose up -d --scale agent=3  # launch 3 instances
+# =============================================================================
+
+version: "3.8"
+
+services:
+  agent:
+    build:
+      context: .
+      dockerfile: Containerfile
+    container_name: oompa-loompa
+    hostname: oompa-loompa
+    ports:
+      - "6080:6080"     # noVNC web UI
+      - "5900:5900"     # VNC direct
+      - "3000:3000"     # dev server 1
+      - "3001:3001"     # dev server 2
+    # volumes:
+      # Uncomment any of these as needed:
+      # --- Workspace ---
+      # - ./workspace:/workspace                    # local project files
+      # --- Claude Code auth ---
+      # - ~/.claude:/home/dev/.claude:ro             # host session/config
+      # --- GitHub Copilot CLI auth ---
+      # - ~/.config/gh:/home/dev/.config/gh:ro       # gh CLI credentials
+      # - ~/.copilot:/home/dev/.copilot:ro           # copilot CLI config
+      # --- OpenAI Codex CLI auth ---
+      # - ~/.codex:/home/dev/.codex:ro               # codex auth + config
+    environment:
+      # Auth via env vars (alternative to volume mounts above).
+      # Set these, or authenticate interactively inside the container.
+      # See README.md for all auth options.
+      #
+      # Claude Code (pick one):
+      - CLAUDE_CODE_OAUTH_TOKEN=${CLAUDE_CODE_OAUTH_TOKEN:-}  # from: claude setup-token
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}              # direct API key
+      # GitHub Copilot CLI (pick one):
+      - COPILOT_GITHUB_TOKEN=${COPILOT_GITHUB_TOKEN:-}        # from: gh auth token
+      - COPILOT_APPS=${COPILOT_APPS:-}                        # from: cat ~/.config/github-copilot/apps.json
+      - GITHUB_TOKEN=${GITHUB_TOKEN:-}
+      # OpenAI Codex CLI (pick one):
+      - CODEX_AUTH=${CODEX_AUTH:-}                             # from: cat ~/.codex/auth.json
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}                    # direct API key
+      # Google Gemini CLI (pick one):
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}                       # from: Google AI Studio
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY:-}                       # alternative key name
+      - GEMINI_OAUTH=${GEMINI_OAUTH:-}                           # from: cat ~/.gemini/oauth_creds.json
+      # Model override (optional - passed to whichever agent is launched):
+      - MODEL=${MODEL:-}
+      # Git access (SSH key or HTTPS token):
+      - GIT_SSH_KEY=${GIT_SSH_KEY:-}                               # base64-encoded SSH deploy key
+      - GIT_TOKEN=${GIT_TOKEN:-}                                   # HTTPS personal access token
+      - GITHUB_URL=${GITHUB_URL:-}                                 # GitHub base URL (default: https://github.com)
+      - GITLAB_URL=${GITLAB_URL:-}                                 # GitLab base URL (default: https://gitlab.com)
+      - GIT_HOST=${GIT_HOST:-}                                     # additional git host URL
+      - GIT_USER_NAME=${GIT_USER_NAME:-}                           # git commit author name
+      - GIT_USER_EMAIL=${GIT_USER_EMAIL:-}                         # git commit author email
+      # Workspace options:
+      - INIT_GIT=${INIT_GIT:-}                                   # set "true" to git-init /workspace (skips Claude trust prompt)
+      #
+      - RESOLUTION=1920x1080x24
+    # Pass initial prompt as the command argument:
+    # command: "build a todo app in React"
+    stdin_open: true
+    tty: true
+
+  # Example: second agent instance on different ports
+  # Uncomment to run multiple agents side by side
+  #
+  # agent-2:
+  #   build:
+  #     context: .
+  #     dockerfile: Containerfile
+  #   container_name: oompa-loompa-2
+  #   hostname: oompa-loompa-2
+  #   ports:
+  #     - "6081:6080"
+  #     - "5901:5900"
+  #     - "3010:3000"
+  #     - "3011:3001"
+  #   volumes:
+  #     - ./workspace:/workspace
+  #   environment:
+  #     - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+  #     - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+  #     - GITHUB_TOKEN=${GITHUB_TOKEN:-}
+  #     - RESOLUTION=1920x1080x24
+  #   stdin_open: true
+  #   tty: true
