@@ -39,7 +39,7 @@ podman run -it --rm \
 Then open **http://localhost:6080/vnc.html** in your browser to access the full desktop.
 See the [Authentication](#authentication) section for all auth options (env vars, mounts, or interactive login).
 
-> **Windows (Podman on WSL2):** Add `--security-opt seccomp=unconfined` if agents need to use Playwright/Chromium. The WSL2 kernel blocks a `setsockopt` syscall that Chromium's crash reporter requires at startup, killing the browser process before it can load any page.
+> **Windows (Podman on WSL2):** If Playwright/Chromium fails to start because Podman's default seccomp profile under WSL2 blocks a `setsockopt` syscall needed by Chromium's crash reporter, you can temporarily add `--security-opt seccomp=unconfined` to the `podman run` command as a workaround. This disables seccomp filtering for the entire container and reduces isolation, so only use it when necessary; a safer long‑term option is to use a custom seccomp profile that allows just the required `setsockopt`/related syscalls.
 
 ### 3. Run with a prompt (non-interactive)
 
