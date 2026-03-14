@@ -7,6 +7,9 @@ echo "  Claude Code | Copilot CLI | Codex CLI | Gemini CLI"
 echo "============================================="
 echo ""
 
+# ---- Fix ownership (home mounts may arrive as root) ----
+sudo chown -R dev:dev /home/dev 2>/dev/null || true
+
 # ---- Parse arguments ----
 # Usage:
 #   podman run ... oompa-loompa "build a todo app"                  # all authenticated agents

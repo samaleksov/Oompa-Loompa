@@ -52,36 +52,31 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
     && rm -rf /var/lib/apt/lists/*
 
 # -----------------------------------------------------------------------------
-# Claude Code (npm - reliable in containers)
-# -----------------------------------------------------------------------------
-RUN npm install -g @anthropic-ai/claude-code
-
-# -----------------------------------------------------------------------------
-# GitHub Copilot CLI
-# -----------------------------------------------------------------------------
-RUN npm install -g @github/copilot
-
-# -----------------------------------------------------------------------------
-# OpenAI Codex CLI
-# -----------------------------------------------------------------------------
-RUN npm install -g @openai/codex
-
-# -----------------------------------------------------------------------------
-# Google Gemini CLI
-# -----------------------------------------------------------------------------
-RUN npm install -g @google/gemini-cli
-
-# -----------------------------------------------------------------------------
-# Playwright (for agent browser interaction)
-# -----------------------------------------------------------------------------
-RUN npm install -g playwright && npx playwright install chromium
-
-# -----------------------------------------------------------------------------
-# Create non-root user 'dev' with sudo
+# Create non-root user 'dev' with sudo (before CLI installs so we can
+# switch to dev for tools that download runtime artifacts)
 # -----------------------------------------------------------------------------
 RUN useradd -m -s /bin/bash dev \
     && echo "dev ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
     && mkdir -p /workspace && chown dev:dev /workspace
+
+# -----------------------------------------------------------------------------
+# CLI agents (global npm installs — puts binaries on PATH for all users)
+# -----------------------------------------------------------------------------
+RUN npm install -g \
+    @anthropic-ai/claude-code \
+    @github/copilot \
+    @openai/codex \
+    @google/gemini-cli \
+    playwright
+
+# -----------------------------------------------------------------------------
+# Playwright browsers — installed as dev so they land in ~dev/.cache/
+# (agents run as dev; installing as root puts them in /root/.cache which
+# is inaccessible and forces agents to re-download at runtime)
+# -----------------------------------------------------------------------------
+USER dev
+RUN npx playwright install chromium
+USER root
 
 # -----------------------------------------------------------------------------
 # Fluxbox config (dark theme, right-click menu with terminals + browsers)
