@@ -1,0 +1,6 @@
+# Force LF line endings for files that run inside Linux containers
+*.sh text eol=lf
+supervisord.conf text eol=lf
+fluxbox-init text eol=lf
+fluxbox-menu text eol=lf
+Containerfile text eol=lf
