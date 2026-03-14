@@ -39,6 +39,8 @@ podman run -it --rm \
 Then open **http://localhost:6080/vnc.html** in your browser to access the full desktop.
 See the [Authentication](#authentication) section for all auth options (env vars, mounts, or interactive login).
 
+> **Windows (Podman on WSL2):** Add `--security-opt seccomp=unconfined` if agents need to use Playwright/Chromium. The WSL2 kernel blocks a `setsockopt` syscall that Chromium's crash reporter requires at startup, killing the browser process before it can load any page.
+
 ### 3. Run with a prompt (non-interactive)
 
 Pass a prompt as the command argument to run all authenticated agents in autonomous mode:
