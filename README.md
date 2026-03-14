@@ -28,11 +28,11 @@ podman run -it --rm \
   # Claude Code - OAuth token (from: claude setup-token)
   -e CLAUDE_CODE_OAUTH_TOKEN="sk-..." \
   # Copilot CLI - apps.json with extension OAuth tokens
-  -v ~/.config/github-copilot:/home/dev/.config/github-copilot:ro \
+  -v ~/.config/github-copilot:/home/dev/.config/github-copilot \
   # Codex CLI - auth.json with ChatGPT session
-  -v ~/.codex:/home/dev/.codex:ro \
+  -v ~/.codex:/home/dev/.codex \
   # Gemini CLI - OAuth credentials
-  -v ~/.gemini:/home/dev/.gemini:ro \
+  -v ~/.gemini:/home/dev/.gemini \
   oompa-loompa
 ```
 
@@ -101,7 +101,7 @@ podman run -it --rm -e ANTHROPIC_API_KEY="sk-ant-..." ... oompa-loompa
 
 **Option C - Mount (Linux hosts where ~/.claude/.credentials.json exists):**
 ```bash
-podman run -it --rm -v ~/.claude:/home/dev/.claude:ro ... oompa-loompa
+podman run -it --rm -v ~/.claude:/home/dev/.claude ... oompa-loompa
 ```
 
 **Option D - Interactive (inside container):**
@@ -147,8 +147,8 @@ The entrypoint writes it to `~/.config/github-copilot/apps.json` inside the cont
 **Option C - Mount (Linux hosts with plaintext token storage):**
 ```bash
 podman run -it --rm \
-  -v ~/.config/gh:/home/dev/.config/gh:ro \
-  -v ~/.copilot:/home/dev/.copilot:ro \
+  -v ~/.config/gh:/home/dev/.config/gh \
+  -v ~/.copilot:/home/dev/.copilot \
   ... oompa-loompa
 ```
 
@@ -188,7 +188,7 @@ podman run -it --rm -e OPENAI_API_KEY="sk-..." ... oompa-loompa
 
 **Option C - Mount:**
 ```bash
-podman run -it --rm -v ~/.codex:/home/dev/.codex:ro ... oompa-loompa
+podman run -it --rm -v ~/.codex:/home/dev/.codex ... oompa-loompa
 ```
 
 **Option D - Interactive (inside container):**
@@ -230,7 +230,7 @@ The entrypoint writes `oauth_creds.json` and `settings.json` inside the containe
 
 **Option C - Mount:**
 ```bash
-podman run -it --rm -v ~/.gemini:/home/dev/.gemini:ro ... oompa-loompa
+podman run -it --rm -v ~/.gemini:/home/dev/.gemini ... oompa-loompa
 ```
 
 **Option D - Interactive (inside container):**
